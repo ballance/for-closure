@@ -1,7 +1,11 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace ballance.it.for_closure
 {
@@ -17,12 +21,64 @@ namespace ballance.it.for_closure
         
         public void Run()
         {
-            RunAgilityPackAsync("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx",  "//*[@id='SalesListGrid_ctl01']/tbody");
+            // RunAgilityPackAsync("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx",  "//*[@id='SalesListGrid_ctl01']/tbody");
+            RunSeleniumWebScraper("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx", String.Empty);
         }  
 
-        private void RunIronWebScraper()
+        private void RunSeleniumWebScraper(string baseUrl, string nodeSelector)
         {
+            var chromeOptions = new ChromeOptions();
+            //chromeOptions.AddArguments("headless");
 
+            using (var driver = new ChromeDriver(chromeOptions))
+            {
+                driver.Navigate().GoToUrl(baseUrl);
+                
+                // Page 1
+                Screenshot pageInitialScreenshot = driver.GetScreenshot();
+                var screenshotInitialByteArray = pageInitialScreenshot.AsByteArray;
+                File.WriteAllBytes("screenshot_initial.jpg", screenshotInitialByteArray);
+
+                // Page 2
+                var jsToBeExecutedGoPageTwo = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl02','')";
+                ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageTwo);
+                
+                var waitPage2 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
+                waitPage2.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
+                Screenshot pageTwoScreenshot = driver.GetScreenshot();
+                var screenshotPageTwoByteArray = pageTwoScreenshot.AsByteArray;
+                File.WriteAllBytes("screenshot_page2.jpg", screenshotPageTwoByteArray);
+
+                // Page 3
+                var jsToBeExecutedGoPageThree = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl03','')";
+                ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageThree);
+                
+                var waitPage3 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
+                waitPage3.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
+                Screenshot pageThreeScreenshot = driver.GetScreenshot();
+                var screenshotPageThreeByteArray = pageThreeScreenshot.AsByteArray;
+                File.WriteAllBytes("screenshot_page3.jpg", screenshotPageThreeByteArray);
+
+                // Page 4
+                var jsToBeExecutedGoPageFour = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl04','')";
+                ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageFour);
+                
+                var waitPage4 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
+                waitPage4.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
+                Screenshot pageFourScreenshot = driver.GetScreenshot();
+                var screenshotPageFourByteArray = pageFourScreenshot.AsByteArray;
+                File.WriteAllBytes("screenshot_page4.jpg", screenshotPageFourByteArray);
+                
+                // Page 5
+                var jsToBeExecutedGoPageFive = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl05','')";
+                ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageFive);
+                
+                var waitPage5 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
+                waitPage5.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
+                Screenshot pageFiveScreenshot = driver.GetScreenshot();
+                var screenshotPageFiveByteArray = pageFiveScreenshot.AsByteArray;
+                File.WriteAllBytes("screenshot_page5.jpg", screenshotPageFiveByteArray);
+            }
         }
 
         private void RunAgilityPackAsync(string baseUrl, string nodeSelector)
