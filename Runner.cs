@@ -28,8 +28,7 @@ namespace ballance.it.for_closure
         private void RunSeleniumWebScraper(string baseUrl, string nodeSelector)
         {
             var chromeOptions = new ChromeOptions();
-            //chromeOptions.AddArguments("headless");
-
+            chromeOptions.AddArguments("headless");
             using (var driver = new ChromeDriver(chromeOptions))
             {
                 driver.Navigate().GoToUrl(baseUrl);
