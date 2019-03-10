@@ -34,49 +34,82 @@ namespace ballance.it.for_closure
                 driver.Navigate().GoToUrl(baseUrl);
                 
                 // Page 1
-                Screenshot pageInitialScreenshot = driver.GetScreenshot();
-                var screenshotInitialByteArray = pageInitialScreenshot.AsByteArray;
-                File.WriteAllBytes("screenshot_initial.jpg", screenshotInitialByteArray);
-
+                var htmlRaw = driver.PageSource;
+                ParsePageText(htmlRaw, "//*[@id='SalesListGrid_ctl01']/tbody");
+                
                 // Page 2
                 var jsToBeExecutedGoPageTwo = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl02','')";
                 ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageTwo);
                 
-                var waitPage2 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
-                waitPage2.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
-                Screenshot pageTwoScreenshot = driver.GetScreenshot();
-                var screenshotPageTwoByteArray = pageTwoScreenshot.AsByteArray;
-                File.WriteAllBytes("screenshot_page2.jpg", screenshotPageTwoByteArray);
-
+                var htmlRawPage2 = driver.PageSource;
+                ParsePageText(htmlRawPage2, "//*[@id='SalesListGrid_ctl01']/tbody");
+                
                 // Page 3
                 var jsToBeExecutedGoPageThree = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl03','')";
                 ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageThree);
                 
-                var waitPage3 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
-                waitPage3.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
-                Screenshot pageThreeScreenshot = driver.GetScreenshot();
-                var screenshotPageThreeByteArray = pageThreeScreenshot.AsByteArray;
-                File.WriteAllBytes("screenshot_page3.jpg", screenshotPageThreeByteArray);
-
+                var htmlRawPage3 = driver.PageSource;
+                ParsePageText(htmlRawPage3, "//*[@id='SalesListGrid_ctl01']/tbody");
+               
                 // Page 4
                 var jsToBeExecutedGoPageFour = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl04','')";
                 ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageFour);
                 
-                var waitPage4 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
-                waitPage4.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
-                Screenshot pageFourScreenshot = driver.GetScreenshot();
-                var screenshotPageFourByteArray = pageFourScreenshot.AsByteArray;
-                File.WriteAllBytes("screenshot_page4.jpg", screenshotPageFourByteArray);
-                
+                var htmlRawPage4 = driver.PageSource;
+                ParsePageText(htmlRawPage4, "//*[@id='SalesListGrid_ctl01']/tbody");
+               
                 // Page 5
                 var jsToBeExecutedGoPageFive = "__doPostBack('SalesListGrid$ctl01$ctl03$ctl01$ctl05','')";
                 ((IJavaScriptExecutor)driver).ExecuteScript(jsToBeExecutedGoPageFive);
                 
-                var waitPage5 = new WebDriverWait(driver, TimeSpan.FromMinutes(1));
-                waitPage5.Until(condition: ExpectedConditions.ElementExists(By.Id("form1")));
-                Screenshot pageFiveScreenshot = driver.GetScreenshot();
-                var screenshotPageFiveByteArray = pageFiveScreenshot.AsByteArray;
-                File.WriteAllBytes("screenshot_page5.jpg", screenshotPageFiveByteArray);
+                var htmlRawPage5 = driver.PageSource;
+                ParsePageText(htmlRawPage5, "//*[@id='SalesListGrid_ctl01']/tbody");
+               
+            }
+        }
+
+        private void ParsePageText(String htmlRaw, string nodeSelector)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(htmlRaw);
+            var node = htmlDoc.DocumentNode.SelectSingleNode(nodeSelector);
+            
+            if (node == null)
+            {
+                // Sanity check on root node.
+                throw new ApplicationException("unable to retrieve root node");
+            }
+
+            foreach(var row in node.ChildNodes)
+            {
+                try
+                {
+                    if (row.NodeType == HtmlNodeType.Text)
+                    {
+                        // First row is sometimes not a data row, skip it.
+                        continue;
+                    }
+
+                    var propertyModel = new PropertyModel()
+                    {
+                        PropertyId = row.SelectSingleNode("td[1]").InnerText,
+                        SpNumber = row.SelectSingleNode("td[2]").InnerText,
+                        County = row.SelectSingleNode("td[3]").InnerText,
+                        SaleDateTime = row.SelectSingleNode("td[4]").InnerText,
+                        Address = row.SelectSingleNode("td[5]").InnerText,
+                        CityStateZip = row.SelectSingleNode("td[6]").InnerText,
+                        DeedOfTrust = row.SelectSingleNode("td[7]").InnerText,
+                        Bid = row.SelectSingleNode("td[8]").InnerText
+                    };
+
+                    _propertyPersistenceManager.PersistProperty(propertyModel);
+                }
+                catch(Exception ex)
+                {
+                    System.Console.WriteLine(row.NodeType);
+                    System.Console.WriteLine("Error selecting node.");
+                    System.Console.WriteLine(ex);
+                }
             }
         }
 
