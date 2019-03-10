@@ -20,7 +20,8 @@ namespace ballance.it.for_closure
                 System.Console.WriteLine("------");
                 System.Console.WriteLine(ex);
             }
-            Console.Read();
+            //Console.Read();
+            System.Console.WriteLine("Completed.");
         }
     }
 }

@@ -64,7 +64,6 @@ namespace ballance.it.for_closure
                 
                 var htmlRawPage5 = driver.PageSource;
                 ParsePageText(htmlRawPage5, "//*[@id='SalesListGrid_ctl01']/tbody");
-               
             }
         }
 
