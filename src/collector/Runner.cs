@@ -24,13 +24,7 @@ namespace ballance.it.for_closure
         public void Run()
         {
             // RunAgilityPackAsync("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx",  "//*[@id='SalesListGrid_ctl01']/tbody");
-            //RunSeleniumWebScraper("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx", String.Empty);
-
-            var retrievedProperties = _propertyPersistenceManager.RetrieveProperties();
-            foreach (var retrievedProperty in retrievedProperties)
-            {
-                System.Console.WriteLine($"{retrievedProperty.PropertyId} {retrievedProperty.Address}");
-            }
+            RunSeleniumWebScraper("https://sales.hutchenslawfirm.com/NCfcSalesList.aspx", String.Empty);
         }  
 
         private void RunSeleniumWebScraper(string baseUrl, string nodeSelector)
