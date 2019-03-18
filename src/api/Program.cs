@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace for_closure_api2
+namespace ballance.it.for_closure.api
 {
     public class Program
     {

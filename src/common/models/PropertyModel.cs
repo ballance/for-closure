@@ -1,6 +1,6 @@
 using Dapper.Contrib.Extensions;
 
-namespace ballance.it.for_closure
+namespace ballance.it.for_closure.common.models
  {
     public class PropertyModel
     {

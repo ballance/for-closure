@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace for_closure_api2.Controllers
+namespace ballance.it.for_closure.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace for_closure_api2
+namespace ballance.it.for_closure.api
 {
     public class Startup
     {

@@ -6,6 +6,8 @@ using HtmlAgilityPack;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using ballance.it.for_closure.common.repositories;
+using ballance.it.for_closure.common.models;
 
 namespace ballance.it.for_closure
 {

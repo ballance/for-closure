@@ -5,8 +5,9 @@ using System.Data;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using MySql.Data.MySqlClient;
+using ballance.it.for_closure.common.models;
 
-namespace ballance.it.for_closure
+namespace ballance.it.for_closure.common.repositories
  {
      public class RepositoryBase : IDisposable
      {
@@ -57,6 +58,13 @@ namespace ballance.it.for_closure
         {
             var properties = _db.Query<PropertyModel>("SELECT * FROM PropertyModels");
             return properties;
+        }
+
+        public PropertyModel GetPropertyById(string propertyId)
+        {
+            var property = _db.QuerySingle<PropertyModel>(
+                $"SELECT * FROM PropertyModels WHERE PropertyId = {propertyId}");
+            return property;
         }
 
         public void Dispose()
